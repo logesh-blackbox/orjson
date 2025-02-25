@@ -144,6 +144,47 @@ class TestApi:
         assert orjson.dumps([], option=None, default=None) == b"[]"
         assert orjson.dumps([], None, None) == b"[]"
 
+    def test_dump_load_file(self):
+        """
+        dump() and load() with file objects
+        """
+        import tempfile
+        import os
+
+        data = {"key": "value", "numbers": [1, 2, 3]}
+        
+        # Test with regular file
+        with tempfile.NamedTemporaryFile(mode='w', delete=False) as tf:
+            orjson.dump(data, tf)
+            tf_name = tf.name
+
+        with open(tf_name, 'r') as f:
+            loaded = orjson.load(f)
+        os.unlink(tf_name)
+        
+        assert loaded == data
+        
+        # Test with StringIO
+        from io import StringIO
+        sio = StringIO()
+        orjson.dump(data, sio)
+        sio.seek(0)
+        loaded = orjson.load(sio)
+        assert loaded == data
+
+    def test_dump_load_invalid_fp(self):
+        """
+        dump() and load() with invalid file-like objects
+        """
+        class BadFile:
+            pass
+
+        with pytest.raises(TypeError):
+            orjson.dump({}, BadFile())
+        
+        with pytest.raises(TypeError):
+            orjson.load(BadFile())
+
     def test_option_not_int(self):
         """
         dumps() option not int or None
