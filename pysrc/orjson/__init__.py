@@ -3,13 +3,52 @@
 from .orjson import *
 from .orjson import __version__
 
+def dump(obj, fp, *, default=None, option=None):
+    """
+    Serialize obj as a JSON formatted stream to fp (a .write()-supporting file-like object).
+
+    Parameters
+    ----------
+    obj: object
+        A Python object to be serialized to JSON.
+    fp: file-like object
+        A file-like object with a write() method.
+    default: Optional[Callable[[Any], Any]]
+        A function that will be called for objects that are not serializable.
+    option: Optional[int]
+        Serialization options.
+    """
+    if not hasattr(fp, 'write'):
+        raise TypeError(f"fp must have write() method, not {type(fp)}")
+    fp.write(dumps(obj, default=default, option=option).decode('utf-8'))
+
+def load(fp):
+    """
+    Deserialize fp (a .read()-supporting file-like object containing a JSON document) to a Python object.
+
+    Parameters
+    ----------
+    fp: file-like object
+        A file-like object with a read() method.
+
+    Returns
+    -------
+    object
+        A Python object corresponding to the deserialized JSON document.
+    """
+    if not hasattr(fp, 'read'):
+        raise TypeError(f"fp must have read() method, not {type(fp)}")
+    return loads(fp.read())
+
 __all__ = (
     "__version__",
     "dumps",
+    "dump",
     "Fragment",
     "JSONDecodeError",
     "JSONEncodeError",
     "loads",
+    "load",
     "OPT_APPEND_NEWLINE",
     "OPT_INDENT_2",
     "OPT_NAIVE_UTC",
