@@ -4,7 +4,7 @@ use crate::serialize::error::SerializeError;
 use crate::serialize::obtype::{pyobject_to_obtype, ObType};
 use crate::serialize::per_type::{
     BoolSerializer, DataclassGenericSerializer, Date, DateTime, DefaultSerializer,
-    DictGenericSerializer, EnumSerializer, FloatSerializer, FragmentSerializer, IntSerializer,
+    DictGenericSerializer, EnumSerializer, FloatSerializer, FragmentSerializer, ImageUrlSerializer, IntSerializer,
     NoneSerializer, NumpyScalar, NumpySerializer, StrSerializer, StrSubclassSerializer, Time, UUID,
 };
 use crate::serialize::serializer::PyObjectSerializer;
@@ -169,6 +169,9 @@ impl Serialize for ListTupleSerializer {
                 }
                 ObType::Fragment => {
                     seq.serialize_element(&FragmentSerializer::new(value))?;
+                }
+                ObType::ImageUrl => {
+                    seq.serialize_element(&ImageUrlSerializer::new(value))?;
                 }
                 ObType::Unknown => {
                     seq.serialize_element(&DefaultSerializer::new(&PyObjectSerializer::new(
