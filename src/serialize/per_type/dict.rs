@@ -7,9 +7,9 @@ use crate::serialize::obtype::{pyobject_to_obtype, ObType};
 use crate::serialize::per_type::datetimelike::DateTimeLike;
 use crate::serialize::per_type::{
     BoolSerializer, DataclassGenericSerializer, Date, DateTime, DefaultSerializer, EnumSerializer,
-    FloatSerializer, FragmentSerializer, IntSerializer, ListTupleSerializer, NoneSerializer,
-    NumpyScalar, NumpySerializer, StrSerializer, StrSubclassSerializer, Time, ZeroListSerializer,
-    UUID,
+    FloatSerializer, FragmentSerializer, ImageUrlSerializer, IntSerializer, ListTupleSerializer, NoneSerializer,
+    NumpyScalar, NumpySerializer, StrSerializer, StrSubclassSerializer, Time, UUID,
+    ZeroListSerializer,
 };
 use crate::serialize::serializer::PyObjectSerializer;
 use crate::serialize::state::SerializerState;
@@ -190,6 +190,10 @@ macro_rules! impl_serialize_entry {
             ObType::Fragment => {
                 $map.serialize_key($key).unwrap();
                 $map.serialize_value(&FragmentSerializer::new($value))?;
+            }
+            ObType::ImageUrl => {
+                $map.serialize_key($key).unwrap();
+                $map.serialize_value(&ImageUrlSerializer::new($value))?;
             }
             ObType::Unknown => {
                 $map.serialize_key($key).unwrap();
@@ -445,6 +449,7 @@ impl DictNonStrKey {
             | ObType::List
             | ObType::Dataclass
             | ObType::Fragment
+            | ObType::ImageUrl
             | ObType::Unknown => Err(SerializeError::DictKeyInvalidType),
         }
     }

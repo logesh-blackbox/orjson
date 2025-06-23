@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-use crate::ffi::orjson_fragmenttype_new;
+use crate::ffi::{orjson_fragmenttype_new, orjson_imageurltype_new};
 use core::ffi::c_char;
 #[cfg(feature = "yyjson")]
 use core::ffi::c_void;
@@ -55,6 +55,7 @@ pub static mut UUID_TYPE: *mut PyTypeObject = null_mut();
 pub static mut ENUM_TYPE: *mut PyTypeObject = null_mut();
 pub static mut FIELD_TYPE: *mut PyTypeObject = null_mut();
 pub static mut FRAGMENT_TYPE: *mut PyTypeObject = null_mut();
+pub static mut IMAGEURL_TYPE: *mut PyTypeObject = null_mut();
 
 pub static mut NUMPY_TYPES: OnceBox<Option<NonNull<NumpyTypes>>> = OnceBox::new();
 
@@ -141,6 +142,7 @@ fn _init_typerefs_impl() -> bool {
             .set(crate::deserialize::KeyMap::default())
             .is_ok());
         FRAGMENT_TYPE = orjson_fragmenttype_new();
+        IMAGEURL_TYPE = orjson_imageurltype_new();
         PyDateTime_IMPORT();
         NONE = Py_None();
         TRUE = Py_True();

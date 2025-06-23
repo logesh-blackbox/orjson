@@ -16,6 +16,9 @@ class JSONEncodeError(TypeError): ...
 class Fragment(tuple):
     contents: Union[bytes, str]
 
+class ImageUrl:
+    def __init__(self, url: str) -> None: ...
+
 OPT_APPEND_NEWLINE: int
 OPT_INDENT_2: int
 OPT_NAIVE_UTC: int

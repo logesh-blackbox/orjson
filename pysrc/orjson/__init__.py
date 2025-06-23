@@ -7,6 +7,7 @@ __all__ = (
     "__version__",
     "dumps",
     "Fragment",
+    "ImageUrl",
     "JSONDecodeError",
     "JSONEncodeError",
     "loads",
